@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interludes SemiBold - Font Study</title>
+    <style>
+        @font-face {
+            font-family: 'Interludes';
+            src: url('Interludes-SemiBold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: block;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            font-family: 'Interludes', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #999;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+
+        .hero {
+            font-family: 'Interludes', sans-serif;
+            font-size: 6rem;
+            line-height: 1.1;
+            margin: 2rem 0 4rem 0;
+            color: #fff;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .pangram {
+            font-family: 'Interludes', sans-serif;
+            font-size: 2rem;
+            margin: 1rem 0;
+            color: #fff;
+        }
+
+        .alphabet {
+            font-family: 'Interludes', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 0.1em;
+            margin: 1rem 0;
+            color: #fff;
+        }
+
+        .numbers {
+            font-family: 'Interludes', sans-serif;
+            font-size: 3rem;
+            margin: 1rem 0;
+            color: #fff;
+        }
+
+        .sizes {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .size-example {
+            font-family: 'Interludes', sans-serif;
+            color: #fff;
+        }
+
+        .size-12 { font-size: 12px; }
+        .size-14 { font-size: 14px; }
+        .size-16 { font-size: 16px; }
+        .size-18 { font-size: 18px; }
+        .size-24 { font-size: 24px; }
+        .size-32 { font-size: 32px; }
+        .size-48 { font-size: 48px; }
+        .size-64 { font-size: 64px; }
+        .size-96 { font-size: 96px; }
+
+        .label {
+            color: #666;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+
+        .glyphs {
+            font-family: 'Interludes', sans-serif;
+            font-size: 2rem;
+            margin: 1rem 0;
+            line-height: 2;
+            color: #fff;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-box {
+            background: #252525;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .comparison-box h3 {
+            font-size: 0.875rem;
+            color: #999;
+            margin-bottom: 1rem;
+            font-family: monospace;
+        }
+
+        .comparison-text {
+            font-size: 1.5rem;
+            line-height: 1.5;
+            color: #fff;
+        }
+
+        .with-font {
+            font-family: 'Interludes', sans-serif;
+        }
+
+        .paragraph {
+            max-width: 70ch;
+            margin: 1rem 0;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .paragraph.with-font {
+            font-family: 'Interludes', sans-serif;
+            color: #fff;
+        }
+
+        .feature-test {
+            font-family: 'Interludes', sans-serif;
+            font-size: 3rem;
+            margin: 1rem 0;
+            color: #fff;
+        }
+
+        .tnum { font-feature-settings: 'tnum'; }
+        .ss01 { font-feature-settings: 'ss01'; }
+        .ss02 { font-feature-settings: 'ss02'; }
+
+        code {
+            background: #252525;
+            padding: 0.2em 0.5em;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #4af;
+        }
+
+        .grid-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .showcase-item {
+            background: #252525;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .showcase-glyph {
+            font-family: 'Interludes', sans-serif;
+            font-size: 4rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .showcase-label {
+            font-size: 0.75rem;
+            color: #666;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interludes SemiBold</h1>
+        <div class="label">Font Study & Specimen</div>
+
+        <div class="hero">
+            The quick brown<br>
+            fox jumps over<br>
+            the lazy dog.
+        </div>
+
+        <div class="section">
+            <h2>Pangrams</h2>
+            <div class="pangram">
+                The quick brown fox jumps over the lazy dog.
+            </div>
+            <div class="pangram">
+                Pack my box with five dozen liquor jugs.
+            </div>
+            <div class="pangram">
+                How vexingly quick daft zebras jump!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Alphabet</h2>
+            <div class="alphabet">
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ
+            </div>
+            <div class="alphabet">
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Numbers & Symbols</h2>
+            <div class="numbers">
+                0123456789
+            </div>
+            <div class="numbers" style="font-size: 2rem;">
+                !@#$%^&*()_+-=[]{}|;':",.<>?/~`
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Special Characters</h2>
+            <div class="glyphs">
+                À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï Ð Ñ Ò Ó Ô Õ Ö Ø Ù Ú Û Ü Ý Þ ß
+            </div>
+            <div class="glyphs">
+                à á â ã ä å æ ç è é ê ë ì í î ï ð ñ ò ó ô õ ö ø ù ú û ü ý þ ÿ
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Critical Glyphs</h2>
+            <div class="grid-showcase">
+                <div class="showcase-item">
+                    <div class="showcase-glyph">1</div>
+                    <div class="showcase-label">one (1)</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">l</div>
+                    <div class="showcase-label">lowercase L</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">I</div>
+                    <div class="showcase-label">uppercase i</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">0</div>
+                    <div class="showcase-label">zero (0)</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">O</div>
+                    <div class="showcase-label">uppercase o</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">il1</div>
+                    <div class="showcase-label">i, L, 1</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">0Oo</div>
+                    <div class="showcase-label">0, O, o</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">g</div>
+                    <div class="showcase-label">lowercase g</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-glyph">a</div>
+                    <div class="showcase-label">lowercase a</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Size Scale</h2>
+            <div class="sizes">
+                <div><div class="label">12px</div><div class="size-example size-12">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">14px</div><div class="size-example size-14">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">16px</div><div class="size-example size-16">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">18px</div><div class="size-example size-18">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">24px</div><div class="size-example size-24">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">32px</div><div class="size-example size-32">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">48px</div><div class="size-example size-48">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">64px</div><div class="size-example size-64">The quick brown fox jumps over the lazy dog.</div></div>
+                <div><div class="label">96px</div><div class="size-example size-96">The quick brown fox</div></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Paragraph Test</h2>
+            <div class="comparison">
+                <div class="comparison-box">
+                    <h3>System Font (Comparison)</h3>
+                    <p class="paragraph">
+                        Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing, and letter-spacing, and adjusting the space between pairs of letters.
+                    </p>
+                </div>
+                <div class="comparison-box">
+                    <h3>Interludes SemiBold</h3>
+                    <p class="paragraph with-font">
+                        Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing, and letter-spacing, and adjusting the space between pairs of letters.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Number Testing</h2>
+            <div class="label">Default Numbers</div>
+            <div class="feature-test">
+                $1,234.56 • 0123456789 • 1/2 3/4
+            </div>
+            <div class="label">Tabular Numbers <code>font-feature-settings: 'tnum'</code></div>
+            <div class="feature-test tnum">
+                $1,234.56 • 0123456789 • 1/2 3/4
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>UI/Code Context</h2>
+            <div class="comparison">
+                <div class="comparison-box">
+                    <h3>Data Tables</h3>
+                    <div style="font-family: 'Interludes', sans-serif; font-size: 1rem; line-height: 2;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+                            <div style="color: #999;">Item</div>
+                            <div style="color: #999; text-align: right;">Qty</div>
+                            <div style="color: #999; text-align: right;">Price</div>
+
+                            <div style="color: #fff;">Widget A</div>
+                            <div style="color: #fff; text-align: right; font-feature-settings: 'tnum';">1,234</div>
+                            <div style="color: #fff; text-align: right; font-feature-settings: 'tnum';">$12.34</div>
+
+                            <div style="color: #fff;">Widget B</div>
+                            <div style="color: #fff; text-align: right; font-feature-settings: 'tnum';">567</div>
+                            <div style="color: #fff; text-align: right; font-feature-settings: 'tnum';">$8.90</div>
+
+                            <div style="color: #fff;">Widget C</div>
+                            <div style="color: #fff; text-align: right; font-feature-settings: 'tnum';">89</div>
+                            <div style="color: #fff; text-align: right; font-feature-settings: 'tnum';">$156.78</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-box">
+                    <h3>Button/Label Text</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <button style="font-family: 'Interludes', sans-serif; font-size: 1rem; padding: 0.75rem 1.5rem; background: #4af; color: #000; border: none; border-radius: 6px; cursor: pointer;">
+                            Download Report
+                        </button>
+                        <button style="font-family: 'Interludes', sans-serif; font-size: 1rem; padding: 0.75rem 1.5rem; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer;">
+                            View Details
+                        </button>
+                        <div style="font-family: 'Interludes', sans-serif; font-size: 0.875rem; padding: 0.5rem 1rem; background: #2a2a2a; border-radius: 4px; color: #4af;">
+                            NEW • 24 items available
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Real-World Samples</h2>
+            <div style="background: #252525; padding: 2rem; border-radius: 8px; font-family: 'Interludes', sans-serif;">
+                <div style="font-size: 2rem; color: #fff; margin-bottom: 0.5rem;">Weather Forecast</div>
+                <div style="font-size: 1rem; color: #999; margin-bottom: 2rem;">San Francisco, CA</div>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; text-align: center;">
+                    <div>
+                        <div style="color: #999; font-size: 0.875rem;">MON</div>
+                        <div style="color: #fff; font-size: 2.5rem; font-feature-settings: 'tnum';">71°</div>
+                        <div style="color: #aaa; font-size: 1rem;">Sunny</div>
+                    </div>
+                    <div>
+                        <div style="color: #999; font-size: 0.875rem;">TUE</div>
+                        <div style="color: #fff; font-size: 2.5rem; font-feature-settings: 'tnum';">68°</div>
+                        <div style="color: #aaa; font-size: 1rem;">Cloudy</div>
+                    </div>
+                    <div>
+                        <div style="color: #999; font-size: 0.875rem;">WED</div>
+                        <div style="color: #fff; font-size: 2.5rem; font-feature-settings: 'tnum';">64°</div>
+                        <div style="color: #aaa; font-size: 1rem;">Rain</div>
+                    </div>
+                    <div>
+                        <div style="color: #999; font-size: 0.875rem;">THU</div>
+                        <div style="color: #fff; font-size: 2.5rem; font-feature-settings: 'tnum';">70°</div>
+                        <div style="color: #aaa; font-size: 1rem;">Partly Cloudy</div>
+                    </div>
+                    <div>
+                        <div style="color: #999; font-size: 0.875rem;">FRI</div>
+                        <div style="color: #fff; font-size: 2.5rem; font-feature-settings: 'tnum';">72°</div>
+                        <div style="color: #aaa; font-size: 1rem;">Sunny</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #333; color: #666; font-size: 0.875rem;">
+            <p>Font: Interludes-SemiBold.woff2 • Font Study Page Generated by Claude Code</p>
+        </div>
+    </div>
+</body>
+</html>

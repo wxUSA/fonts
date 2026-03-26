@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monospace Font Comparison Study</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600&family=Roboto+Mono:wght@400;600&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #999;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .font-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .font-box {
+            background: #252525;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .font-name {
+            font-size: 0.875rem;
+            color: #4af;
+            margin-bottom: 1rem;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .font-sample {
+            font-size: 1.125rem;
+            color: #fff;
+            line-height: 1.6;
+            margin: 0.5rem 0;
+        }
+
+        /* Font families */
+        .dejavu { font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace; }
+        .droid { font-family: 'Droid Sans Mono', monospace; }
+        .inconsolata { font-family: 'Inconsolata', monospace; }
+        .liberation { font-family: 'Liberation Mono', 'Courier New', monospace; }
+        .noto { font-family: 'Noto Mono', monospace; }
+        .roboto { font-family: 'Roboto Mono', monospace; }
+        .source { font-family: 'Source Code Pro', monospace; }
+
+        .large-sample {
+            font-size: 2.5rem;
+            margin: 1rem 0;
+        }
+
+        .critical-chars {
+            font-size: 3rem;
+            margin: 1rem 0;
+            letter-spacing: 0.05em;
+        }
+
+        .code-sample {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e0e0e0;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+        }
+
+        .keyword { color: #ff79c6; }
+        .string { color: #50fa7b; }
+        .function { color: #8be9fd; }
+        .number { color: #bd93f9; }
+        .comment { color: #6272a4; }
+
+        .size-demo {
+            display: grid;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .size-12 { font-size: 12px; }
+        .size-14 { font-size: 14px; }
+        .size-16 { font-size: 16px; }
+        .size-18 { font-size: 18px; }
+
+        .comparison-row {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .label {
+            color: #666;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+
+        .full-width-box {
+            background: #252525;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin: 1rem 0;
+        }
+
+        .table-demo {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 1rem;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .table-header {
+            color: #999;
+            font-weight: 600;
+        }
+
+        .table-cell {
+            color: #fff;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Monospace Font Comparison</h1>
+        <div class="subtitle">Comparing popular monospace fonts for code and data display</div>
+
+        <h2>Critical Character Differentiation</h2>
+        <div class="label">Testing: 1 l I | 0 O o | {} [] () &lt;&gt;</div>
+        <div class="font-grid">
+            <div class="font-box">
+                <div class="font-name">DejaVu Sans Mono</div>
+                <div class="font-sample dejavu critical-chars">1lI|0Oo</div>
+                <div class="font-sample dejavu critical-chars">{}[]()&lt;&gt;</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Droid Sans Mono</div>
+                <div class="font-sample droid critical-chars">1lI|0Oo</div>
+                <div class="font-sample droid critical-chars">{}[]()&lt;&gt;</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Inconsolata</div>
+                <div class="font-sample inconsolata critical-chars">1lI|0Oo</div>
+                <div class="font-sample inconsolata critical-chars">{}[]()&lt;&gt;</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Liberation Mono</div>
+                <div class="font-sample liberation critical-chars">1lI|0Oo</div>
+                <div class="font-sample liberation critical-chars">{}[]()&lt;&gt;</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Noto Mono</div>
+                <div class="font-sample noto critical-chars">1lI|0Oo</div>
+                <div class="font-sample noto critical-chars">{}[]()&lt;&gt;</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Roboto Mono</div>
+                <div class="font-sample roboto critical-chars">1lI|0Oo</div>
+                <div class="font-sample roboto critical-chars">{}[]()&lt;&gt;</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Source Code Pro</div>
+                <div class="font-sample source critical-chars">1lI|0Oo</div>
+                <div class="font-sample source critical-chars">{}[]()&lt;&gt;</div>
+            </div>
+        </div>
+
+        <h2>Numbers & Alignment</h2>
+        <div class="font-grid">
+            <div class="font-box">
+                <div class="font-name">DejaVu Sans Mono</div>
+                <div class="font-sample dejavu large-sample">0123456789</div>
+                <div class="font-sample dejavu">$1,234.56</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Droid Sans Mono</div>
+                <div class="font-sample droid large-sample">0123456789</div>
+                <div class="font-sample droid">$1,234.56</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Inconsolata</div>
+                <div class="font-sample inconsolata large-sample">0123456789</div>
+                <div class="font-sample inconsolata">$1,234.56</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Liberation Mono</div>
+                <div class="font-sample liberation large-sample">0123456789</div>
+                <div class="font-sample liberation">$1,234.56</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Noto Mono</div>
+                <div class="font-sample noto large-sample">0123456789</div>
+                <div class="font-sample noto">$1,234.56</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Roboto Mono</div>
+                <div class="font-sample roboto large-sample">0123456789</div>
+                <div class="font-sample roboto">$1,234.56</div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Source Code Pro</div>
+                <div class="font-sample source large-sample">0123456789</div>
+                <div class="font-sample source">$1,234.56</div>
+            </div>
+        </div>
+
+        <h2>Code Samples</h2>
+
+        <div class="comparison-row">
+            <div class="label">DejaVu Sans Mono</div>
+            <div class="full-width-box">
+                <pre class="code-sample dejavu"><span class="keyword">function</span> <span class="function">calculateTotal</span>(<span>items</span>) {
+  <span class="keyword">let</span> total = <span class="number">0</span>;
+  <span class="comment">// Sum all item prices</span>
+  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> items) {
+    total += item.price * item.quantity;
+  }
+  <span class="keyword">return</span> total.toFixed(<span class="number">2</span>);
+}</pre>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Droid Sans Mono</div>
+            <div class="full-width-box">
+                <pre class="code-sample droid"><span class="keyword">function</span> <span class="function">calculateTotal</span>(<span>items</span>) {
+  <span class="keyword">let</span> total = <span class="number">0</span>;
+  <span class="comment">// Sum all item prices</span>
+  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> items) {
+    total += item.price * item.quantity;
+  }
+  <span class="keyword">return</span> total.toFixed(<span class="number">2</span>);
+}</pre>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Inconsolata</div>
+            <div class="full-width-box">
+                <pre class="code-sample inconsolata"><span class="keyword">function</span> <span class="function">calculateTotal</span>(<span>items</span>) {
+  <span class="keyword">let</span> total = <span class="number">0</span>;
+  <span class="comment">// Sum all item prices</span>
+  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> items) {
+    total += item.price * item.quantity;
+  }
+  <span class="keyword">return</span> total.toFixed(<span class="number">2</span>);
+}</pre>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Liberation Mono</div>
+            <div class="full-width-box">
+                <pre class="code-sample liberation"><span class="keyword">function</span> <span class="function">calculateTotal</span>(<span>items</span>) {
+  <span class="keyword">let</span> total = <span class="number">0</span>;
+  <span class="comment">// Sum all item prices</span>
+  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> items) {
+    total += item.price * item.quantity;
+  }
+  <span class="keyword">return</span> total.toFixed(<span class="number">2</span>);
+}</pre>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Noto Mono</div>
+            <div class="full-width-box">
+                <pre class="code-sample noto"><span class="keyword">function</span> <span class="function">calculateTotal</span>(<span>items</span>) {
+  <span class="keyword">let</span> total = <span class="number">0</span>;
+  <span class="comment">// Sum all item prices</span>
+  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> items) {
+    total += item.price * item.quantity;
+  }
+  <span class="keyword">return</span> total.toFixed(<span class="number">2</span>);
+}</pre>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Roboto Mono</div>
+            <div class="full-width-box">
+                <pre class="code-sample roboto"><span class="keyword">function</span> <span class="function">calculateTotal</span>(<span>items</span>) {
+  <span class="keyword">let</span> total = <span class="number">0</span>;
+  <span class="comment">// Sum all item prices</span>
+  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> items) {
+    total += item.price * item.quantity;
+  }
+  <span class="keyword">return</span> total.toFixed(<span class="number">2</span>);
+}</pre>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Source Code Pro</div>
+            <div class="full-width-box">
+                <pre class="code-sample source"><span class="keyword">function</span> <span class="function">calculateTotal</span>(<span>items</span>) {
+  <span class="keyword">let</span> total = <span class="number">0</span>;
+  <span class="comment">// Sum all item prices</span>
+  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> items) {
+    total += item.price * item.quantity;
+  }
+  <span class="keyword">return</span> total.toFixed(<span class="number">2</span>);
+}</pre>
+            </div>
+        </div>
+
+        <h2>Data Table Context</h2>
+
+        <div class="comparison-row">
+            <div class="label">DejaVu Sans Mono</div>
+            <div class="full-width-box">
+                <div class="table-demo dejavu">
+                    <div class="table-header">ID</div>
+                    <div class="table-header">Name</div>
+                    <div class="table-header text-right">Quantity</div>
+                    <div class="table-header text-right">Price</div>
+
+                    <div class="table-cell">001</div>
+                    <div class="table-cell">Widget Alpha</div>
+                    <div class="table-cell text-right">1,234</div>
+                    <div class="table-cell text-right">$12.34</div>
+
+                    <div class="table-cell">102</div>
+                    <div class="table-cell">Component Beta</div>
+                    <div class="table-cell text-right">567</div>
+                    <div class="table-cell text-right">$8.90</div>
+
+                    <div class="table-cell">203</div>
+                    <div class="table-cell">Module Gamma</div>
+                    <div class="table-cell text-right">89</div>
+                    <div class="table-cell text-right">$156.78</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Roboto Mono</div>
+            <div class="full-width-box">
+                <div class="table-demo roboto">
+                    <div class="table-header">ID</div>
+                    <div class="table-header">Name</div>
+                    <div class="table-header text-right">Quantity</div>
+                    <div class="table-header text-right">Price</div>
+
+                    <div class="table-cell">001</div>
+                    <div class="table-cell">Widget Alpha</div>
+                    <div class="table-cell text-right">1,234</div>
+                    <div class="table-cell text-right">$12.34</div>
+
+                    <div class="table-cell">102</div>
+                    <div class="table-cell">Component Beta</div>
+                    <div class="table-cell text-right">567</div>
+                    <div class="table-cell text-right">$8.90</div>
+
+                    <div class="table-cell">203</div>
+                    <div class="table-cell">Module Gamma</div>
+                    <div class="table-cell text-right">89</div>
+                    <div class="table-cell text-right">$156.78</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="label">Source Code Pro</div>
+            <div class="full-width-box">
+                <div class="table-demo source">
+                    <div class="table-header">ID</div>
+                    <div class="table-header">Name</div>
+                    <div class="table-header text-right">Quantity</div>
+                    <div class="table-header text-right">Price</div>
+
+                    <div class="table-cell">001</div>
+                    <div class="table-cell">Widget Alpha</div>
+                    <div class="table-cell text-right">1,234</div>
+                    <div class="table-cell text-right">$12.34</div>
+
+                    <div class="table-cell">102</div>
+                    <div class="table-cell">Component Beta</div>
+                    <div class="table-cell text-right">567</div>
+                    <div class="table-cell text-right">$8.90</div>
+
+                    <div class="table-cell">203</div>
+                    <div class="table-cell">Module Gamma</div>
+                    <div class="table-cell text-right">89</div>
+                    <div class="table-cell text-right">$156.78</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Size Comparison</h2>
+        <div class="font-grid">
+            <div class="font-box">
+                <div class="font-name">DejaVu Sans Mono</div>
+                <div class="size-demo dejavu">
+                    <div class="size-12">12px: The quick brown fox</div>
+                    <div class="size-14">14px: The quick brown fox</div>
+                    <div class="size-16">16px: The quick brown fox</div>
+                    <div class="size-18">18px: The quick brown fox</div>
+                </div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Inconsolata</div>
+                <div class="size-demo inconsolata">
+                    <div class="size-12">12px: The quick brown fox</div>
+                    <div class="size-14">14px: The quick brown fox</div>
+                    <div class="size-16">16px: The quick brown fox</div>
+                    <div class="size-18">18px: The quick brown fox</div>
+                </div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Roboto Mono</div>
+                <div class="size-demo roboto">
+                    <div class="size-12">12px: The quick brown fox</div>
+                    <div class="size-14">14px: The quick brown fox</div>
+                    <div class="size-16">16px: The quick brown fox</div>
+                    <div class="size-18">18px: The quick brown fox</div>
+                </div>
+            </div>
+            <div class="font-box">
+                <div class="font-name">Source Code Pro</div>
+                <div class="size-demo source">
+                    <div class="size-12">12px: The quick brown fox</div>
+                    <div class="size-14">14px: The quick brown fox</div>
+                    <div class="size-16">16px: The quick brown fox</div>
+                    <div class="size-18">18px: The quick brown fox</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #333; color: #666; font-size: 0.875rem;">
+            <p>Monospace Font Comparison Study • Generated by Claude Code</p>
+            <p style="margin-top: 0.5rem;">Fonts loaded via Google Fonts (Inconsolata, Roboto Mono, Source Code Pro) and system defaults</p>
+        </div>
+    </div>
+</body>
+</html>

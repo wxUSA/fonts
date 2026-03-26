@@ -25,7 +25,12 @@ Options:
     --designer NAME           Set designer name in font metadata
     --vendor NAME             Set vendor/manufacturer name in font metadata
     --freeze-features LIST    Override global features (e.g., 'cv05,cv08')
-    --freeze-glyphs LIST      Override selective glyph freezing (e.g., 'one:tnum,zero:tnum')
+    --freeze-glyphs LIST      Override selective glyph freezing
+                              Format: glyph:feature[:width[:lsb]]
+                              - 'one:tnum' = use tnum glyph with tnum metrics
+                              - 'one:tnum:false' = use tnum glyph with original metrics
+                              - 'one:tnum:1080' = use tnum glyph with custom width 1080
+                              - 'one:tnum:1080:96' = custom width 1080 and LSB 96
     -h, --help                Show help message
 
 Examples:
@@ -33,7 +38,7 @@ Examples:
     python process_fonts.py -i fonts/ -o output/ --rename "Inter/Winter"
     python process_fonts.py -i fonts/ -o output/ --designer "Your Name" --vendor "Your Company"
     python process_fonts.py -i fonts/ -o output/ --freeze-features "cv05,cv08,ss01"
-    python process_fonts.py -i fonts/ -o output/ --freeze-glyphs "one:tnum,zero:tnum"
+    python process_fonts.py -i fonts/ -o output/ --freeze-glyphs "one:tnum:1080:96,zero:tnum"
 
 Configuration:
     Edit the SELECTIVE_GLYPH_FREEZING and GLOBAL_FEATURES lists below to customize
@@ -53,12 +58,18 @@ from fontTools.ttLib import TTFont
 # ============================================================================
 
 # Selective glyph freezing: Replace specific glyphs with their feature variants
-# Format: (glyph_name, feature_tag)
+# Format: (glyph_name, feature_tag, copy_metrics, custom_width, custom_lsb)
+#   glyph_name: e.g., 'one', 'zero'
+#   feature_tag: e.g., 'tnum' (tabular numbers), 'onum' (oldstyle numbers)
+#   copy_metrics: True to copy width from variant, False to keep original width
+#   custom_width: (optional) specific width value to use
+#   custom_lsb: (optional) specific left side bearing to use
 # Common glyph names: zero, one, two, three, four, five, six, seven, eight, nine
 # Common features: tnum (tabular numbers), onum (oldstyle numbers), etc.
+# To find metrics, run: python inspect_glyph_widths.py <font.ttf> one
 SELECTIVE_GLYPH_FREEZING = [
-    ('one', 'tnum'),    # Make "1" always tabular
-    # ('zero', 'tnum'),   # Make "0" always tabular
+    ('one', 'tnum', True, 1080, 96),    # Use tnum shape with width 1080 and original LSB 96
+    # ('zero', 'tnum', True),            # Make "0" tabular with full width
 ]
 
 # Global feature freezing: Apply these features to all glyphs
@@ -106,14 +117,18 @@ def find_substitution_glyph(font, base_glyph, feature_tag):
 
     return None
 
-def copy_glyph_data(font, source_glyph, target_glyph):
+def copy_glyph_data(font, source_glyph, target_glyph, copy_metrics=True, custom_width=None, custom_lsb=None):
     """
-    Copy glyph outline and metrics from source to target.
+    Copy glyph outline and optionally metrics from source to target.
+    For variable fonts, also copies variation data (gvar table).
 
     Args:
         font: TTFont object
         source_glyph: Source glyph name
         target_glyph: Target glyph name
+        copy_metrics: If True, copy width and side bearings; if False, keep original metrics
+        custom_width: If specified, set this as the advance width (overrides copy_metrics)
+        custom_lsb: If specified, set this as the left side bearing (overrides copy_metrics)
     """
     glyf = font.get('glyf')
     hmtx = font['hmtx']
@@ -122,9 +137,27 @@ def copy_glyph_data(font, source_glyph, target_glyph):
         # Copy outline
         glyf.glyphs[target_glyph] = glyf.glyphs[source_glyph]
 
-    # Copy metrics (width and left side bearing)
+    # Copy variation data for variable fonts
+    if 'gvar' in font:
+        gvar = font['gvar']
+        if hasattr(gvar, 'variations') and source_glyph in gvar.variations:
+            # Copy the variation data from source to target
+            gvar.variations[target_glyph] = gvar.variations[source_glyph]
+
+    # Handle metrics based on settings
     if source_glyph in hmtx.metrics and target_glyph in hmtx.metrics:
-        hmtx.metrics[target_glyph] = hmtx.metrics[source_glyph]
+        source_width, source_lsb = hmtx.metrics[source_glyph]
+        target_width, target_lsb = hmtx.metrics[target_glyph]
+
+        if custom_width is not None or custom_lsb is not None:
+            # Use custom values, falling back to source for unspecified values
+            final_width = custom_width if custom_width is not None else source_width
+            final_lsb = custom_lsb if custom_lsb is not None else source_lsb
+            hmtx.metrics[target_glyph] = (final_width, final_lsb)
+        elif copy_metrics:
+            # Copy both width and side bearing from source
+            hmtx.metrics[target_glyph] = hmtx.metrics[source_glyph]
+        # else: keep original metrics (do nothing)
 
 def apply_selective_glyph_freezing(font_path, glyph_substitutions):
     """
@@ -132,7 +165,8 @@ def apply_selective_glyph_freezing(font_path, glyph_substitutions):
 
     Args:
         font_path: Path to TTF file (will be modified in place)
-        glyph_substitutions: List of (glyph_name, feature_tag) tuples
+        glyph_substitutions: List of (glyph_name, feature_tag, copy_metrics, custom_width, custom_lsb) tuples
+                            copy_metrics, custom_width, and custom_lsb are optional
 
     Returns:
         Number of successful substitutions
@@ -143,12 +177,43 @@ def apply_selective_glyph_freezing(font_path, glyph_substitutions):
     font = TTFont(font_path)
     successful = 0
 
-    for glyph_name, feature_tag in glyph_substitutions:
+    for item in glyph_substitutions:
+        # Handle 2, 3, 4, or 5-tuple formats for backward compatibility
+        if len(item) == 2:
+            glyph_name, feature_tag = item
+            copy_metrics = True
+            custom_width = None
+            custom_lsb = None
+        elif len(item) == 3:
+            glyph_name, feature_tag, copy_metrics = item
+            custom_width = None
+            custom_lsb = None
+        elif len(item) == 4:
+            glyph_name, feature_tag, copy_metrics, custom_width = item
+            custom_lsb = None
+        else:
+            glyph_name, feature_tag, copy_metrics, custom_width, custom_lsb = item
+
         substitute_glyph = find_substitution_glyph(font, glyph_name, feature_tag)
 
         if substitute_glyph:
-            copy_glyph_data(font, substitute_glyph, glyph_name)
-            print(f"    ✓ Froze '{glyph_name}' with {feature_tag} variant ('{substitute_glyph}')")
+            copy_glyph_data(font, substitute_glyph, glyph_name,
+                          copy_metrics=copy_metrics, custom_width=custom_width, custom_lsb=custom_lsb)
+
+            # Create descriptive note about what was done
+            if custom_width is not None or custom_lsb is not None:
+                parts = []
+                if custom_width is not None:
+                    parts.append(f"width: {custom_width}")
+                if custom_lsb is not None:
+                    parts.append(f"lsb: {custom_lsb}")
+                metrics_note = f" (custom {', '.join(parts)})"
+            elif not copy_metrics:
+                metrics_note = " (shape only)"
+            else:
+                metrics_note = ""
+
+            print(f"    ✓ Froze '{glyph_name}' with {feature_tag} variant ('{substitute_glyph}'){metrics_note}")
             successful += 1
         else:
             print(f"    ⚠ Could not find {feature_tag} variant for '{glyph_name}'")
@@ -414,7 +479,7 @@ Examples:
   %(prog)s -i fonts/ -o output/ --rename "Inter/Winter"
   %(prog)s -i fonts/ -o output/ --designer "Your Name" --vendor "Your Company"
   %(prog)s -i fonts/ -o output/ --freeze-features "cv05,cv08,ss01"
-  %(prog)s -i fonts/ -o output/ --freeze-glyphs "one:tnum,zero:tnum"
+  %(prog)s -i fonts/ -o output/ --freeze-glyphs "one:tnum:1080:96,zero:tnum:600"
   %(prog)s --input ./fonts --output ./processed --rename "OldFont/NewFont" --designer "Jane Doe"
 
 Configuration:
@@ -468,7 +533,10 @@ Common Features:
     parser.add_argument(
         '-g', '--freeze-glyphs',
         metavar='GLYPHS',
-        help='Comma-separated list of glyph:feature pairs for selective freezing (e.g., "one:tnum,zero:tnum"). Overrides SELECTIVE_GLYPH_FREEZING.'
+        help='Comma-separated list of glyph:feature[:width[:lsb]] for selective freezing. '
+             'Examples: "one:tnum:1080:96" (custom width and LSB), "one:tnum:1080" (custom width only), '
+             '"one:tnum:false" (shape only), "zero:tnum" (full metrics). '
+             'Overrides SELECTIVE_GLYPH_FREEZING.'
     )
 
     args = parser.parse_args()
@@ -506,22 +574,59 @@ Common Features:
             print("Error: --freeze-features provided but no valid features found")
             sys.exit(1)
 
-    # Parse freeze-glyphs option (comma-separated glyph:feature pairs)
+    # Parse freeze-glyphs option (comma-separated glyph:feature[:width[:lsb]] tuples)
     glyph_substitutions = SELECTIVE_GLYPH_FREEZING
     if args.freeze_glyphs:
         glyph_substitutions = []
-        for pair in args.freeze_glyphs.split(','):
-            pair = pair.strip()
-            if ':' not in pair:
-                print(f"Error: Invalid glyph:feature format '{pair}'. Expected format like 'one:tnum'")
+        for item in args.freeze_glyphs.split(','):
+            item = item.strip()
+            if ':' not in item:
+                print(f"Error: Invalid glyph:feature[:width[:lsb]] format '{item}'. Expected format like 'one:tnum' or 'one:tnum:1080:96'")
                 sys.exit(1)
-            glyph, feature = pair.split(':', 1)
-            glyph = glyph.strip()
-            feature = feature.strip()
+            parts = item.split(':')
+            if len(parts) < 2 or len(parts) > 4:
+                print(f"Error: Invalid glyph:feature[:width[:lsb]] format '{item}'. Expected 2-4 parts")
+                sys.exit(1)
+
+            glyph = parts[0].strip()
+            feature = parts[1].strip()
+            copy_metrics = True  # default
+            custom_width = None  # default
+            custom_lsb = None    # default
+
+            if len(parts) >= 3:
+                third_param = parts[2].strip()
+
+                # Try to parse as a number (custom width)
+                try:
+                    custom_width = int(third_param)
+                    copy_metrics = True  # When using custom width, we're modifying metrics
+                except ValueError:
+                    # Not a number, treat as boolean
+                    metrics_str = third_param.lower()
+                    if metrics_str in ('false', 'no', '0'):
+                        copy_metrics = False
+                    elif metrics_str in ('true', 'yes', '1'):
+                        copy_metrics = True
+                    else:
+                        print(f"Error: Invalid metrics value '{parts[2]}'. Use 'true', 'false', or a number for custom width")
+                        sys.exit(1)
+
+            if len(parts) == 4:
+                # Fourth parameter is custom LSB
+                try:
+                    custom_lsb = int(parts[3].strip())
+                except ValueError:
+                    print(f"Error: Invalid LSB value '{parts[3]}'. Must be a number")
+                    sys.exit(1)
+
             if glyph and feature:
-                glyph_substitutions.append((glyph, feature))
+                if custom_width is not None or custom_lsb is not None:
+                    glyph_substitutions.append((glyph, feature, copy_metrics, custom_width, custom_lsb))
+                else:
+                    glyph_substitutions.append((glyph, feature, copy_metrics))
             else:
-                print(f"Error: Invalid glyph:feature format '{pair}'. Both glyph and feature must be non-empty")
+                print(f"Error: Invalid glyph:feature[:width[:lsb]] format '{item}'. Glyph and feature must be non-empty")
                 sys.exit(1)
 
     print(f"Input directory:  {args.input}")
@@ -532,8 +637,26 @@ Common Features:
     if glyph_substitutions:
         source = "(from --freeze-glyphs)" if args.freeze_glyphs else "(from config)"
         print(f"Selective glyph freezing {source}:")
-        for glyph, feature in glyph_substitutions:
-            print(f"  • '{glyph}' with {feature}")
+        for item in glyph_substitutions:
+            # Handle 2, 3, 4, or 5-tuple formats
+            if len(item) == 2:
+                glyph, feature = item
+                metrics_info = "with metrics"
+            elif len(item) == 3:
+                glyph, feature, copy_metrics = item
+                metrics_info = "with metrics" if copy_metrics else "shape only"
+            elif len(item) == 4:
+                glyph, feature, copy_metrics, custom_width = item
+                metrics_info = f"custom width: {custom_width}"
+            else:
+                glyph, feature, copy_metrics, custom_width, custom_lsb = item
+                parts = []
+                if custom_width is not None:
+                    parts.append(f"width: {custom_width}")
+                if custom_lsb is not None:
+                    parts.append(f"lsb: {custom_lsb}")
+                metrics_info = f"custom {', '.join(parts)}" if parts else "with metrics"
+            print(f"  • '{glyph}' with {feature} ({metrics_info})")
     else:
         print("Selective glyph freezing: (none)")
     print()
